@@ -21,7 +21,7 @@ module.exports = {
 		ecmaVersion: 12,
 		sourceType: 'module'
 	},
-	plugins: ['@typescript-eslint', 'import', 'filenames', 'react', 'prettier', 'graphql'],
+	plugins: ['@typescript-eslint', 'import', 'filenames', 'react', 'prettier'],
 	rules: {
 		'no-use-before-define': 'off',
 		'@typescript-eslint/no-explicit-any': 2,
@@ -32,11 +32,6 @@ module.exports = {
 		'react/prop-types': 'off',
 		'import/newline-after-import': 2,
 		'import/no-duplicates': 2,
-		// Deshabilitadas mientras agregamos tipos de GQL
-		// 'graphql/capitalized-type-name': ['error', {env: 'literal'}],
-		// 'graphql/named-operations': ['error', {env: 'literal'}],
-		// 'graphql/no-deprecated-fields': ['warn', {env: 'literal'}],
-		// 'graphql/template-strings': ['error', {env: 'literal'}],
 		'no-nested-ternary': 'error',
 		'import/order': [
 			2,
@@ -46,8 +41,6 @@ module.exports = {
 				alphabetize: {order: 'asc', caseInsensitive: true}
 			}
 		],
-		// Deshabilitada por este bug https://github.com/import-js/eslint-plugin-import/issues/1282
-		// 'import/named': 2,
 		'no-console': ['error', {allow: ['warn', 'error']}],
 		'import/extensions': [
 			2,
