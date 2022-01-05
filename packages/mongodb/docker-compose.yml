@@ -1,0 +1,15 @@
+version: '3.5'
+services:
+  mongodb:
+    image: mongo:${MONGO_IMAGE_VERION}
+    container_name: mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${PASSWORD}
+      - MONGO_INITDB_DATABASE=chat
+    volumes:
+      - ./database:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    ports:
+      - 27017:27017
+    restart: unless-stopped
