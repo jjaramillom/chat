@@ -9,7 +9,7 @@ export interface User {
 
 const schema = new Schema<User>({
 	name: {type: String, required: true},
-	username: {type: String, required: true},
+	username: {type: String, required: true, unique: true},
 	password: {type: String, required: true},
 	avatar: String
 });
