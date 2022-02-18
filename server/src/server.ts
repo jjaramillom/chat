@@ -1,14 +1,12 @@
 import express, {Request, Response, NextFunction} from 'express';
 import createError, {HttpError} from 'http-errors';
-import dotEnv from 'dotenv';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
 
+import './env';
 import {env} from './utils/env';
 import MongoDBConnection from './services/MongoDbConnection';
 import usersRouter from './routes/usersRouter';
-
-dotEnv.config();
 
 const app = express();
 MongoDBConnection.connect();
