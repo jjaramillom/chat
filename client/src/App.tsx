@@ -1,11 +1,11 @@
 import React from 'react';
 
+import LoginPage from './modules/auth/pages/LoginPage';
+
 function App() {
 	return (
-		<div className="App">
-			<header className="App-header">
-				App
-			</header>
+		<div className="w-full h-full">
+			<LoginPage />
 		</div>
 	);
 }
