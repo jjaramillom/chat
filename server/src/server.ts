@@ -37,3 +37,6 @@ app.use((err: HttpError, req: Request, res: Response) => {
 app.listen(port, () => {
 	console.log(`Chart server is running on ${port}.`);
 });
+
+// Exported for testing
+export default app;
