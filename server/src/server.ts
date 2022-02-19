@@ -7,6 +7,7 @@ import './env';
 import {env} from './utils/env';
 import MongoDBConnection from './services/MongoDbConnection';
 import usersRouter from './routes/usersRouter';
+import authRouter from './routes/authRouter';
 
 const app = express();
 MongoDBConnection.connect();
@@ -14,6 +15,7 @@ MongoDBConnection.connect();
 app.use(bodyParser.json());
 app.use(morgan('dev'));
 
+app.use('/api/auth', authRouter);
 app.use('/api/user', usersRouter);
 
 const port = env('PORT', '5000');
