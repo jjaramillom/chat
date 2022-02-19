@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction} from 'express';
 import createError from 'http-errors';
 
-import UsersDataSource from '../dataSources/UsersDataSource';
+import {UsersDataSource} from '../dataSources';
 
 export async function getAllUsers(req: Request, res: Response, next: NextFunction) {
 	try {

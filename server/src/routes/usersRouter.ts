@@ -8,6 +8,6 @@ const usersRouter = Router();
 usersRouter
 	.route('/')
 	.get(authenticate.authenticate('jwt', {session: false}), getAllUsers)
-	.post(createUser);
+	.post(authenticate.authenticate('jwt', {session: false}), createUser);
 
 export default usersRouter;
