@@ -1,4 +1,4 @@
-export function env(key: string, fallback?: string): string {
+function env(key: string, fallback?: string): string {
 	const value = process.env[key];
 	if (value !== undefined) {
 		return value;
@@ -8,3 +8,5 @@ export function env(key: string, fallback?: string): string {
 		throw new Error(`missing environment variable: "${key}"`);
 	}
 }
+
+export default env;

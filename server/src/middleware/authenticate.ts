@@ -3,7 +3,7 @@ import {Strategy as JwtStrategy, ExtractJwt} from 'passport-jwt';
 import {Strategy as LocalStrategy} from 'passport-local';
 
 import {UsersDataSource} from '../dataSources';
-import {env} from '../utils/env';
+import {env} from '../utils';
 
 passport.use(
 	new JwtStrategy(

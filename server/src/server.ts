@@ -1,10 +1,10 @@
 import express, {Request, Response, NextFunction} from 'express';
 import createError, {HttpError} from 'http-errors';
 import bodyParser from 'body-parser';
-import morgan from 'morgan';
 
 import './env';
-import {env} from './utils/env';
+import {loggerMiddleware} from './middleware';
+import {env, logger} from './utils';
 import MongoDBConnection from './services/MongoDbConnection';
 import usersRouter from './routes/usersRouter';
 import authRouter from './routes/authRouter';
@@ -13,7 +13,7 @@ const app = express();
 MongoDBConnection.connect();
 
 app.use(bodyParser.json());
-app.use(morgan('dev'));
+app.use(loggerMiddleware);
 
 app.use('/api/auth', authRouter);
 app.use('/api/user', usersRouter);
@@ -35,7 +35,7 @@ app.use((err: HttpError, req: Request, res: Response) => {
 });
 
 app.listen(port, () => {
-	console.log(`Chart server is running on ${port}.`);
+	logger.info(`Chart server is running on http://localhost:${port}`);
 });
 
 // Exported for testing

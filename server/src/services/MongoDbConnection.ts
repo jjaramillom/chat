@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import {env} from '../utils/env';
+import {env, logger} from '../utils';
 
 export default class MongoDbConnection {
 	private static dbConnection: typeof mongoose;
@@ -12,11 +12,11 @@ export default class MongoDbConnection {
 		const dbUri = `mongodb://${env('MONGO_DB_URL')}/${env('MONGO_DB_NAME')}`;
 
 		mongoose.connection.once('open', () => {
-			console.log('connected to MongoDB');
+			logger.info(`connected to MongoDB in mongodb://${env('MONGO_DB_URL')}`);
 		});
 
 		mongoose.connection.once('error', () => {
-			console.error('could not connect to mongoDB');
+			logger.error('could not connect to mongoDB');
 		});
 
 		MongoDbConnection.dbConnection = await mongoose.connect(dbUri);
