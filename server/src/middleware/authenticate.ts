@@ -15,20 +15,23 @@ passport.use(
 );
 
 passport.use(
-	new LocalStrategy(async (username, password, cb) => {
-		try {
-			const user = await UsersDataSource.getUserByUsername(username);
-			if (!user) {
-				throw new Error('could not find user');
+	new LocalStrategy(
+		{usernameField: 'username', passwordField: 'password', session: false},
+		async (username, password, cb) => {
+			try {
+				const user = await UsersDataSource.getUserByUsername(username);
+				if (!user) {
+					throw new Error('could not find user');
+				}
+				if (await user.isPasswordValid(password)) {
+					return cb(null, user);
+				}
+				return cb('password is invalid');
+			} catch (error) {
+				cb(error);
 			}
-			if (await user.isPasswordValid(password)) {
-				return cb(null, user);
-			}
-			return cb('password is invalid');
-		} catch (error) {
-			cb(error);
 		}
-	})
+	)
 );
 
 export default passport;

@@ -1,5 +1,3 @@
-import {HydratedDocument} from 'mongoose';
-
 import UserModel, {User} from '../models/User';
 
 export default class UsersDataSource {

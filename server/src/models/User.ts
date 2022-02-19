@@ -13,7 +13,7 @@ interface UserMethods {
 	isPasswordValid: (this: User, receivedPassword: string) => Promise<boolean>;
 }
 
-interface UserDocument extends User, Document, UserMethods {}
+export interface UserDocument extends User, Document, UserMethods {}
 
 const schema = new Schema<UserDocument, Model<User>, UserMethods>({
 	name: {type: String, required: true},
@@ -22,23 +22,25 @@ const schema = new Schema<UserDocument, Model<User>, UserMethods>({
 	avatar: String
 });
 
-schema.pre('save', async function (this: User & Document, next) {
-	if (!this.isModified('password')) {
-		return next();
-	}
-
-	genSalt(SALT_WORK_FACTOR, (error, salt) => {
-		if (error) {
-			return next(error);
+schema.pre('save', async function (this: User & Document): Promise<void> {
+	return new Promise((resolve, reject) => {
+		if (!this.isModified('password')) {
+			resolve();
 		}
 
-		hash(this.password, salt, (error, hash) => {
+		genSalt(SALT_WORK_FACTOR, (error, salt) => {
 			if (error) {
-				return next(error);
+				reject(error);
 			}
 
-			this.password = hash;
-			next();
+			hash(this.password, salt, (error, hash) => {
+				if (error) {
+					reject(error);
+				}
+
+				this.password = hash;
+				resolve();
+			});
 		});
 	});
 });
