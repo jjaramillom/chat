@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 
 import {Button, Card, Input} from '../../../components';
 import {useAuthContext} from '../../../state/AuthProvider';
+import {useNotificationBannerContext} from '../../../state/NotificationBannerProvider';
 import axios from '../../../utils/queries/axios';
 import classes from './LoginPage.module.scss';
 
@@ -13,12 +14,15 @@ const LoginPage: React.FC = () => {
 	const [username, setUsername] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
 	const {setJwt} = useAuthContext();
+	const {showErrorBanner} = useNotificationBannerContext();
 
 	async function handleLogin() {
 		try {
 			const {data} = await axios.post('/auth/login', {username, password});
 			setJwt(data.token);
 		} catch (error) {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			showErrorBanner('Could not log in', (error as any).toString());
 			console.error(error);
 		}
 	}
