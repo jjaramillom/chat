@@ -17,6 +17,9 @@ const LoginPage: React.FC = () => {
 	const {showErrorBanner} = useNotificationBannerContext();
 
 	async function handleLogin() {
+		if (!username || !password) {
+			return;
+		}
 		try {
 			const {data} = await axios.post('/auth/login', {username, password});
 			setJwt(data.token);
@@ -31,15 +34,28 @@ const LoginPage: React.FC = () => {
 		<div className="w-full flex justify-center mt-48">
 			<Card className={classes.card}>
 				<div className="flex flex-col items-center gap-y-2">
-					<Input className={classes.input} value={username} placeHolder="Username" onChange={setUsername} />
+					<Input
+						className={classes.input}
+						value={username}
+						placeHolder="Username"
+						onChange={setUsername}
+						data-testid="username-input"
+					/>
 					<Input
 						className={classes.input}
 						value={password}
 						placeHolder="Password"
 						onChange={setPassword}
 						type="password"
+						data-testid="password-input"
 					/>
-					<Button className="w-32" onClick={handleLogin} text="Login" />
+					<Button
+						className="w-32"
+						onClick={handleLogin}
+						text="Login"
+						disabled={!username || !password}
+						data-testid="login-button"
+					/>
 				</div>
 			</Card>
 		</div>

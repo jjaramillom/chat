@@ -9,13 +9,14 @@ interface Props {
 	type?: InputProps['type'];
 }
 
-const Input: React.FC<Props> = ({onChange, value, placeHolder = '', className, type}) => (
+const Input: React.FC<Props> = ({onChange, value, placeHolder = '', className, type, ...props}) => (
 	<AntInput
 		className={className}
 		onChange={(ev) => onChange(ev.target.value)}
 		placeholder={placeHolder}
 		value={value}
 		type={type}
+		{...props}
 	/>
 );
 
