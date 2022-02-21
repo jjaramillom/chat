@@ -1,4 +1,4 @@
-import {render, fireEvent, screen} from '@testing-library/react';
+import {render, fireEvent, screen, waitFor} from '@testing-library/react';
 import {rest} from 'msw';
 import {setupServer} from 'msw/node';
 import React from 'react';
@@ -6,8 +6,11 @@ import '@testing-library/jest-dom';
 
 import LoginPage from '../LoginPage';
 
+const mockSetJwt = jest.fn();
+jest.mock('../../../../state/AuthProvider', () => ({useAuthContext: () => ({setJwt: mockSetJwt})}));
+
 const server = setupServer(
-	rest.post('/api/auth/login', (req, res, ctx) => {
+	rest.post('/api/auth/login', (_, res, ctx) => {
 		return res(ctx.json({token: 'this is a JWT token'}));
 	})
 );
@@ -39,5 +42,18 @@ describe('LoginPage', () => {
 		fireEvent.change(passwordInput, {target: {value: 'myPassword'}});
 
 		expect(screen.getByTestId('login-button')).not.toHaveAttribute('disabled');
+	});
+
+	test('should save jwt in context', async () => {
+		render(<LoginPage />);
+
+		fireEvent.change(screen.getByTestId('username-input'), {target: {value: 'myUsername'}});
+		fireEvent.change(screen.getByTestId('password-input'), {target: {value: 'myPassword'}});
+
+		fireEvent.click(screen.getByTestId('login-button'));
+
+		await waitFor(() => {
+			expect(mockSetJwt).toHaveBeenCalledWith('this is a JWT token');
+		});
 	});
 });
