@@ -6,7 +6,7 @@ import {env} from '../utils';
 
 export function login(req: Request, res: Response) {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const {_id, password, __v, ...payload} = req.user as UserDocument;
-	const token = sign(payload, env('JWT_SECRET'));
+	const {username, name} = req.user as UserDocument;
+	const token = sign({username, name, expiresIn: Date.now() + Number(env('JWT_EXPIRES_IN')) * 1000}, env('JWT_SECRET'));
 	res.status(200).send({token});
 }

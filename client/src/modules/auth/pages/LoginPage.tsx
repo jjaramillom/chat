@@ -13,8 +13,8 @@ export async function login(username: string, password: string): Promise<{jwt: s
 const LoginPage: React.FC = () => {
 	const [username, setUsername] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
-	const {setJwt} = useAuthContext();
-	const {showErrorBanner} = useNotificationBannerContext();
+	const {login} = useAuthContext();
+	const {showErrorBanner, clearBanner} = useNotificationBannerContext();
 
 	async function handleLogin() {
 		if (!username || !password) {
@@ -22,7 +22,8 @@ const LoginPage: React.FC = () => {
 		}
 		try {
 			const {data} = await axios.post('/auth/login', {username, password});
-			setJwt(data.token);
+			login(data.token);
+			clearBanner();
 		} catch (error) {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			showErrorBanner('Could not log in', (error as any).toString());

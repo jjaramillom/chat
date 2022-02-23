@@ -1,22 +1,27 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+import {Routes, Route} from 'react-router-dom';
 
 import NotificationBanner from './components/NotificationBanner/NotificationBanner';
 import LoginPage from './modules/auth/pages/LoginPage';
-import AuthProvider from './state/AuthProvider';
-import combineProviders from './state/combineProviders';
-import NotificationBannerProvider from './state/NotificationBannerProvider';
-import QueryClientProvider from './utils/queries/QueryClientProvider';
-
-const CombinedProviders = combineProviders(AuthProvider, QueryClientProvider, NotificationBannerProvider);
+import ChatPage from './modules/chat/ChatPage';
+import {useAuthContext} from './state/AuthProvider';
 
 function App() {
+	const {jwt, tryAutoLogin} = useAuthContext();
+
+	useEffect(() => {
+		tryAutoLogin()
+	}, []);
+
 	return (
-		<CombinedProviders>
+		<div>
 			<NotificationBanner />
 			<div className="w-full h-full">
-				<LoginPage />
+				<Routes>
+					<Route path="/" element={jwt ? <ChatPage /> : <LoginPage />} />
+				</Routes>
 			</div>
-		</CombinedProviders>
+		</div>
 	);
 }
 
