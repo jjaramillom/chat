@@ -25,7 +25,7 @@ body {
 }
 
 .resize-handle {
-	@apply border-r-4 border-b-4 border-t-0 border-l-0 border-gray-400 border-solid;
+	@apply border-r-4 border-b-4 border-t-0 border-l-0 border-gray-400 border-dotted;
 	position: absolute;
 	width: 14px;
 	height: 14px;
