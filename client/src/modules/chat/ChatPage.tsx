@@ -1,7 +1,9 @@
 import React from 'react';
 
+import ChatMessages from './components/ChatMessages';
+
 const ChatPage: React.FC = () => {
-	return <div>Chat</div>;
+	return <ChatMessages />;
 };
 
 export default ChatPage;

@@ -23,3 +23,13 @@ body {
 * {
 	box-sizing: border-box;
 }
+
+.resize-handle {
+	@apply border-r-4 border-b-4 border-t-0 border-l-0 border-gray-400 border-solid;
+	position: absolute;
+	width: 14px;
+	height: 14px;
+	cursor: se-resize;
+	bottom: 8px;
+	right: 8px;
+}
