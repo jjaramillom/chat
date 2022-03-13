@@ -6,10 +6,6 @@ import {useNotificationBannerContext} from '../../../state/NotificationBannerPro
 import axios from '../../../utils/queries/axios';
 import classes from './LoginPage.module.scss';
 
-export async function login(username: string, password: string): Promise<{jwt: string}> {
-	return axios.post('/auth/login', {username, password});
-}
-
 const LoginPage: React.FC = () => {
 	const [username, setUsername] = useState<string>('');
 	const [password, setPassword] = useState<string>('');

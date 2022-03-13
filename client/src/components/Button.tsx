@@ -7,10 +7,12 @@ interface Props {
 	text?: string;
 	type?: ButtonProps['type'];
 	disabled?: boolean;
+	icon?: ButtonProps['icon'];
+	shape?: ButtonProps['shape'];
 }
 
-const Button: React.FC<Props> = ({onClick, text = 'default text', className, type = 'default', disabled, ...props}) => (
-	<AntButton className={className} onClick={onClick} type={type} disabled={disabled} {...props}>
+const Button: React.FC<Props> = ({text, type = 'default', ...props}) => (
+	<AntButton type={type} {...props}>
 		{text}
 	</AntButton>
 );

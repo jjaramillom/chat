@@ -1,9 +1,9 @@
-// import {RadiusUpleftOutlined} from '@ant-design/icons';
 import React, {useState} from 'react';
 import {ResizableBox, ResizeCallbackData} from 'react-resizable';
 
 import {Card} from '../../../components';
 import useWindowDimensions from '../../../hooks/useWindowDimensions';
+import ChatInput from './ChatInput';
 
 const MIN_HEIGHT = 500;
 const MIN_WIDTH = 500;
@@ -29,10 +29,14 @@ const ChatMessages: React.FC = () => {
 			maxConstraints={[containerWidth - MAIN_PADDING, containerHeight - MAIN_PADDING - FOOTER_HEIGHT - NAVBAR_HEIGHT]}
 			minConstraints={[MIN_WIDTH, MIN_HEIGHT]}
 			onResize={(_, data) => handleResize(data)}
-			handle={<span className="resize-handle" />}
-			// handle={<RadiusUpleftOutlined className="absolute right-0 bottom-0 cursor-nwse-resize" />}
-		>
-			<Card className="w-full h-full">test</Card>
+			handle={<span className="resize-handle" />}>
+			<Card className="w-full h-full">
+				<ChatInput
+					onSend={() => {
+						/*  */
+					}}
+				/>
+			</Card>
 		</ResizableBox>
 	);
 };
