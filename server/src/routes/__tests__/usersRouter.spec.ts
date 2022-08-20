@@ -16,12 +16,12 @@ jest.mock('../../dataSources', () => ({
 	}
 }));
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type UserQueryResult = UserDocument & {_id: any};
-const UsersDataSourceMock = UsersDataSource as jest.Mocked<typeof UsersDataSource>;
-UsersDataSourceMock.getAllUsers.mockReturnValue(
+type UsersDataSourceType = InstanceType<typeof UsersDataSource>;
+
+const usersDataSourceMock = UsersDataSource as unknown as jest.Mocked<UsersDataSourceType>;
+usersDataSourceMock.list.mockReturnValue(
 	new Promise((resolve) => {
-		resolve(MOCKED_USERS as UserQueryResult[]);
+		resolve(MOCKED_USERS as UserDocument[]);
 	})
 );
 
