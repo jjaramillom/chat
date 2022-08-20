@@ -7,18 +7,22 @@ export interface User {
 	name: string;
 	username: string;
 	password: string;
+	isAdmin: boolean;
+	id: string;
 	avatar?: string;
 }
+
 interface UserMethods {
 	isPasswordValid: (this: User, receivedPassword: string) => Promise<boolean>;
 }
 
-export interface UserDocument extends User, Document, UserMethods {}
+export type UserDocument = User & Document & UserMethods;
 
 const schema = new Schema<UserDocument, Model<User>, UserMethods>({
 	name: {type: String, required: true},
 	username: {type: String, required: true, unique: true},
 	password: {type: String, required: true},
+	isAdmin: {type: Boolean, required: false, default: false},
 	avatar: String
 });
 

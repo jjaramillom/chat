@@ -1,10 +1,12 @@
 import createError from 'http-errors';
 import passport from 'passport';
 import {Strategy as JwtStrategy, ExtractJwt} from 'passport-jwt';
-import {Strategy as LocalStrategy} from 'passport-local';
+import {BasicStrategy} from 'passport-http';
 
 import {UsersDataSource} from '../dataSources';
 import {env} from '../utils';
+
+const usersDataSource = new UsersDataSource();
 
 passport.use(
 	new JwtStrategy(
@@ -20,24 +22,21 @@ passport.use(
 );
 
 passport.use(
-	new LocalStrategy(
-		{usernameField: 'username', passwordField: 'password', session: false},
-		async (username, password, cb) => {
-			try {
-				const user = await UsersDataSource.getUserByUsername(username);
-				if (!user) {
-					// throw new Error('could not find user');
-					return cb(createError(401, 'could not find user'));
-				}
-				if (await user.isPasswordValid(password)) {
-					return cb(null, user);
-				}
-				return cb(createError(401, 'password is invalid'));
-			} catch (error) {
-				cb(error);
+	new BasicStrategy(async (username, password, cb) => {
+		try {
+			const user = await usersDataSource.getByUsername(username);
+			if (!user) {
+				// throw new Error('could not find user');
+				return cb(createError(401, 'could not find user'));
 			}
+			if (await user.isPasswordValid(password)) {
+				return cb(null, user);
+			}
+			return cb(createError(401, 'password is invalid'));
+		} catch (error) {
+			cb(error);
 		}
-	)
+	})
 );
 
 export default passport;

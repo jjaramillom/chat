@@ -1,23 +1,29 @@
-import UserModel, {User} from '../models/User';
+import UserModel, {UserDocument} from '../models/User';
 
 export default class UsersDataSource {
-	static async getAllUsers() {
+	public async list(): Promise<UserDocument[]> {
 		const result = await UserModel.find();
-		return result;
+
+		return result.map(addId);
 	}
 
-	static async getUserByUsername(username: string) {
+	public async getByUsername(username: string): Promise<UserDocument | null> {
 		const result = await UserModel.findOne({username});
-		return result;
+		return result ? addId(result) : null;
 	}
 
-	static async getUserById(id: string) {
+	public async getById(id: string): Promise<UserDocument | null> {
 		const result = await UserModel.findById(id);
-		return result;
+		return result ? addId(result) : null;
 	}
 
-	static async createUser(user: User) {
+	public async create(user: UserDocument): Promise<UserDocument | null> {
 		const result = await UserModel.create(user);
-		return result;
+		return addId(result);
 	}
+}
+
+function addId(user: UserDocument): UserDocument {
+	user.id = user._id;
+	return user;
 }
