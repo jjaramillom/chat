@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 app.use(loggerMiddleware);
 
 app.use('/api/auth', authRouter);
-app.use('/api/user', usersRouter);
+app.use('/api/users', usersRouter);
 
 const port = env('PORT', '5000');
 
@@ -26,7 +26,8 @@ app.use((_, __, next: NextFunction) => {
 });
 
 // error handler
-app.use((err: HttpError, req: Request, res: Response) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
 	res.locals.message = err.message;
 	res.locals.error = req.app.get('env') === 'development' ? err : {};
 
