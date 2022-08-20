@@ -4,11 +4,11 @@ import {hash, genSalt, compare} from 'bcrypt';
 const SALT_WORK_FACTOR = 10;
 
 export interface User {
+	id: string;
 	name: string;
 	username: string;
 	password: string;
 	isAdmin: boolean;
-	id: string;
 	avatar?: string;
 }
 
@@ -60,6 +60,4 @@ schema.methods.isPasswordValid = async function (receivedPassword) {
 	});
 };
 
-const UserModel = model<UserDocument>('User', schema);
-
-export default UserModel;
+export default model<UserDocument>('User', schema);
