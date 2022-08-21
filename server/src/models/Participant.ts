@@ -1,19 +1,16 @@
-import {Schema, model, Document, Model} from 'mongoose';
-
-type ParticipantType = 'public' | 'private';
+import {Schema, model, Document, Model, Types} from 'mongoose';
 
 export interface Participant {
 	id: string;
 	userId: string;
-	roomId: ParticipantType;
+	room: Types.ObjectId;
 }
 
 export type ParticipantDocument = Participant & Document;
 
 const schema = new Schema<ParticipantDocument, Model<Participant>>({
-	id: {type: String, required: true, unique: true},
 	userId: {type: String, required: true},
-	roomId: {type: String, required: true}
+	room: {type: Schema.Types.ObjectId, ref: 'Room'}
 });
 
 const ParticipantModel = model<ParticipantDocument>('Participant', schema);

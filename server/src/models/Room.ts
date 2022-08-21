@@ -11,7 +11,6 @@ export interface Room {
 export type RoomDocument = Room & Document;
 
 const schema = new Schema<RoomDocument, Model<Room>>({
-	id: {type: String, required: true, unique: true},
 	name: {type: String, required: true},
 	type: {type: String, required: true}
 });

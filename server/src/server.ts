@@ -8,6 +8,8 @@ import {env, logger} from './utils';
 import MongoDBConnection from './services/MongoDbConnection';
 import usersRouter from './routes/usersRouter';
 import authRouter from './routes/authRouter';
+import roomsRouter from './routes/roomsRouter';
+import participantsRouter from './routes/participantsRouter';
 
 const app = express();
 MongoDBConnection.connect();
@@ -17,6 +19,8 @@ app.use(loggerMiddleware);
 
 app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/rooms', roomsRouter);
+app.use('/api/participants', participantsRouter);
 
 const port = env('PORT', '5000');
 

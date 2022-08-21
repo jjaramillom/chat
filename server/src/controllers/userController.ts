@@ -37,10 +37,10 @@ export async function createUser(req: Request, res: Response, next: NextFunction
 	}
 
 	try {
-		await usersDataSource.create(req.body);
-		res.status(200).end();
+		const user = await usersDataSource.create(req.body);
+		res.status(200).send(user).end();
 	} catch (error) {
-		next(createError(500, 'could not create new user'));
+		next(createError(500, 'could not create user'));
 	}
 }
 
@@ -49,6 +49,7 @@ function toUserResponse(user: UserDocument) {
 		name: user.name,
 		username: user.username,
 		avatar: user.avatar,
-		isAdmin: user.isAdmin
+		isAdmin: user.isAdmin,
+		id: user.id
 	};
 }

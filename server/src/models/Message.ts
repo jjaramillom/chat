@@ -11,7 +11,6 @@ export interface Message {
 export type MessageDocument = Message & Document;
 
 const schema = new Schema<MessageDocument, Model<Message>>({
-	id: {type: String, required: true, unique: true},
 	roomId: {type: String, required: true},
 	senderId: {type: String, required: true},
 	message: {type: String, required: true},

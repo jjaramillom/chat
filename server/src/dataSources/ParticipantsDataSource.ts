@@ -1,4 +1,5 @@
-import ParticipantModel, {ParticipantDocument} from '../models/Participant';
+import ParticipantModel, {Participant, ParticipantDocument} from '../models/Participant';
+import {Room} from '../models/Room';
 
 export default class ParticipantsDataSource {
 	public async list(): Promise<ParticipantDocument[]> {
@@ -7,8 +8,8 @@ export default class ParticipantsDataSource {
 		return result.map(addId);
 	}
 
-	public async lisByRoomId(roomId: string): Promise<ParticipantDocument[]> {
-		const result = await ParticipantModel.find({roomId});
+	public async listByRoomId(roomId: string): Promise<ParticipantDocument[]> {
+		const result = await ParticipantModel.find({room: roomId});
 		return result.map(addId);
 	}
 
@@ -17,13 +18,20 @@ export default class ParticipantsDataSource {
 		return result.map(addId);
 	}
 
-	public async create(participant: ParticipantDocument): Promise<ParticipantDocument | null> {
+	public async listByUserIdRoomPopulated(
+		userId: string
+	): Promise<(Omit<ParticipantDocument, 'room'> & {room: Room})[]> {
+		const result = await ParticipantModel.find({userId}).populate<{room: Room}>('room');
+		return result.map(addId);
+	}
+
+	public async create(participant: Omit<Participant, 'id'>): Promise<ParticipantDocument | null> {
 		const result = await ParticipantModel.create(participant);
 		return addId(result);
 	}
 }
 
-function addId(participant: ParticipantDocument): ParticipantDocument {
+function addId<T>(participant: T & {id: string; _id: string}): T {
 	participant.id = participant._id;
 	return participant;
 }
