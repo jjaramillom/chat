@@ -19,17 +19,17 @@ interface TokenPayload {
 
 export interface AuthContext {
   jwt: string;
-  login: (jwt: string) => void;
-  tryAutoLogin: () => void;
+  login: (jwt: string) => Promise<void>;
+  tryAutoLogin: () => Promise<void>;
   logout: () => void;
 }
 
 const authContext = createContext<AuthContext>({
   jwt: '',
-  login() {
+  async login() {
     /*  */
   },
-  tryAutoLogin() {
+  async tryAutoLogin() {
     /*  */
   },
   logout() {

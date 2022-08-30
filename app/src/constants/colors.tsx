@@ -1,5 +1,8 @@
 export default {
-  primary: '#4f148c',
-  accent: '#ff6f00',
-  primaryLight: '#6E518C',
+  main: '#264653',
+  mainLight: '#2a9d8f',
+  secondary: '#e9c46a',
+  secondaryLight: '#f4a261',
+  accent: '#e76f51',
+  gray: '#ccc',
 };
