@@ -1,0 +1,79 @@
+{
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"ecmaFeatures": {
+			"jsx": true
+		},
+		"parser": "@typescript-eslint/parser",
+		"project": ["./client/tsconfig.json", "./backend/tsconfig.json", "./app/tsconfig.json"],
+		"ecmaVersion": 2020
+	},
+	"env": {
+		"node": true,
+		"es2021": true,
+		"browser": true
+	},
+	"plugins": ["@typescript-eslint", "import", "filenames", "jest", "react", "prettier"],
+	"extends": [
+		"eslint:recommended",
+		"plugin:react/recommended",
+		"plugin:jest/recommended",
+		"plugin:jest/style",
+		"plugin:vue-i18n/recommended",
+		"prettier"
+	],
+	"rules": {
+		"@typescript-eslint/ban-ts-comment": "off",
+		"@typescript-eslint/interface-name-prefix": "off",
+		"@typescript-eslint/no-explicit-any": "error",
+		"@typescript-eslint/no-unused-vars": ["error", {"args": "none"}],
+		"@typescript-eslint/no-use-before-define": "off",
+		"curly": "error",
+		"filenames/match-exported": [2, ["pascal", "camel"]],
+		"import/newline-after-import": "error",
+		"import/no-duplicates": "error",
+		"import/order": [
+			2,
+			{
+				"newlines-between": "always",
+				"groups": ["external", "builtin"],
+				"alphabetize": {"order": "asc", "caseInsensitive": true},
+				"pathGroupsExcludedImportTypes": ["internal"]
+			}
+		],
+		"jest/no-disabled-tests": "off",
+		"jest/no-duplicate-hooks": "error",
+		"jest/no-if": "error",
+		"jest/no-standalone-expect": ["error", {"additionalTestBlockFunctions": ["each.test"]}],
+		"jest/prefer-hooks-on-top": "error",
+		"jest/require-top-level-describe": "error",
+		"jest/valid-title": "error",
+		"no-console": ["warn", {"allow": ["warn", "error"]}],
+		"no-debugger": "warn",
+		"no-nested-ternary": "error",
+		"no-sequences": "error"
+	},
+	"settings": {
+		"import/extensions": [".ts", ".tsx"],
+		"import/resolver": {
+			"typescript": {}
+		}
+		
+	},
+	"overrides": [
+		{
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+        "@typescript-eslint/no-shadow": ["error"],
+        "no-shadow": "off",
+        "no-undef": "off"
+      },
+    },
+		{
+			"files": ["**/__tests__/*.{j,t}s?(x)"],
+			"env": {
+				"jest": true
+			}
+		}
+	]
+}
