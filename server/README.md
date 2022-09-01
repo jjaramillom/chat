@@ -1,6 +1,6 @@
 # MyChat App
 
-This is the frontend app for the chat project. It is developed using React.
+This is the backend for the chat project.
 
 ## Scripts
 
@@ -8,4 +8,4 @@ We enforce the usage of Yarn to install dependencies and run scripts. Using NPM 
 
 ### yarn dev
 
-Starts the client server
+Starts the server
