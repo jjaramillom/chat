@@ -1,0 +1,56 @@
+{
+  "name": "chat",
+  "version": "0",
+  "description": "Multi-platform chat application",
+  "private": true,
+  "workspaces": [
+    "app",
+    "client",
+    "server"
+  ],
+  "engines": {
+    "node": ">=16.15",
+    "yarn": ">=1.22",
+    "npm": "use-yarn-instead"
+  },
+  "scripts": {
+    "ui": "yarn workspace client",
+    "server": "yarn workspace server",
+    "app": "yarn workspace app",
+    "scan:vulnerabilities": "audit-ci --moderate --skip-dev"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "eslint": "^8.11.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-import-resolver-typescript": "^2.4.0",
+    "eslint-plugin-filenames": "^1.3.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^26.1.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.23.2",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.3.7",
+    "prettier": "^2.6.0",
+    "typescript": "^4.8.2",
+    "utility-types": "^3.10.0"
+  },
+  "resolutions": {
+    "minimist": "^1.2.6",
+    "nth-check": "^2.0.1",
+    "@types/react": "17.0.38",
+    "@types/react-dom": "17.0.17",
+    "ts-node": "^10.8.1"
+  },
+  "lint-staged": {
+    "*.md": "prettier --write",
+    "app/src/**/*.{ts,tsx}": "eslint --fix",
+    "app/src/**/*.*": "prettier --write",
+    "chat/src/**/*.{ts,tsx}": "eslint --fix",
+    "chat/src/**/*.*": "prettier --write",
+    "backend/src/**/*.{ts,tsx}": "eslint --fix",
+    "backend/src/**/*.*": "prettier --write"
+  }
+}

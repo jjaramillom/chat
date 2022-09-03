@@ -1,0 +1,3 @@
+package.json
+*.svg
+*.spec.ts.snap
