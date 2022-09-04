@@ -3,11 +3,19 @@
   "version": "0",
   "description": "Multi-platform chat application",
   "private": true,
-  "workspaces": [
-    "app",
-    "client",
-    "server"
-  ],
+  "workspaces": {
+    "packages": [
+      "app",
+      "client",
+      "server"
+    ],
+    "nohoist": [
+      "**/react",
+      "**/react-dom",
+      "**/react-native",
+      "**/react-native/**"
+    ]
+  },
   "engines": {
     "node": ">=16.15",
     "yarn": ">=1.22",
