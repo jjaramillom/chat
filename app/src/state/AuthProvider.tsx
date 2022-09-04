@@ -65,7 +65,7 @@ const AuthProvider: FCWithChildren = ({children}) => {
   }
 
   async function login(newJwt: string) {
-    setJwt(jwt);
+    setJwt(newJwt);
     await AsyncStorage.setItem(LOCAL_STORAGE_JWT_KEY, newJwt);
   }
 

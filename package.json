@@ -10,10 +10,10 @@
       "server"
     ],
     "nohoist": [
-      "**/react",
-      "**/react-dom",
       "**/react-native",
-      "**/react-native/**"
+      "**/react-native/**",
+      "**/@rneui",
+      "**/@rneui/**"
     ]
   },
   "engines": {

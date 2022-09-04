@@ -20,7 +20,6 @@ const LoginScreen = () => {
         {},
         {auth: {username, password}},
       );
-      console.log(data);
       login(data.token);
     } catch (error) {
       console.error(error);
