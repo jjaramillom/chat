@@ -1,9 +1,10 @@
 import React from 'react';
 
+import {FCWithChildren} from '../types/shared';
 import Footer from './Footer';
 import Navbar from './Navbar';
 
-const Layout: React.FC = ({children}) => {
+const Layout: FCWithChildren = ({children}) => {
 	return (
 		<div className="flex flex-col min-h-screen w-full	">
 			<Navbar />

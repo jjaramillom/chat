@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-filename-extension */
 import React from 'react';
-import ReactDOM from 'react-dom';
+import {createRoot} from 'react-dom/client';
 import {BrowserRouter} from 'react-router-dom';
 
 import App from './App';
@@ -10,15 +10,17 @@ import NotificationBannerProvider from './state/NotificationBannerProvider';
 import QueryClientProvider from './utils/queries/QueryClientProvider';
 import './styles/global.scss';
 
+const container = document.getElementById('root');
+const root = createRoot(container!);
+
 const CombinedProviders = combineProviders(AuthProvider, QueryClientProvider, NotificationBannerProvider);
 
-ReactDOM.render(
+root.render(
 	<React.StrictMode>
 		<BrowserRouter>
 			<CombinedProviders>
 				<App />
 			</CombinedProviders>
 		</BrowserRouter>
-	</React.StrictMode>,
-	document.getElementById('root')
+	</React.StrictMode>
 );
