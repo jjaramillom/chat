@@ -1,10 +1,10 @@
-/* eslint-disable react/display-name */
-import React, {ComponentProps, FC} from 'react';
+import React, {ComponentProps} from 'react';
+import {FCWithChildren} from '../types/shared';
 
-export default (...components: FC[]): FC => {
+export default (...components: FCWithChildren[]): FCWithChildren => {
 	return components.reduce(
 		(AccumulatedComponents, CurrentComponent) => {
-			return ({children}: ComponentProps<FC>): JSX.Element => {
+			return ({children}: ComponentProps<FCWithChildren>): JSX.Element => {
 				return (
 					<AccumulatedComponents>
 						<CurrentComponent>{children}</CurrentComponent>
