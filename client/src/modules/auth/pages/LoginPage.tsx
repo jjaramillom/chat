@@ -17,7 +17,7 @@ const LoginPage: React.FC = () => {
 			return;
 		}
 		try {
-			const {data} = await axios.post('/auth/login', {username, password});
+			const {data} = await axios.post('/auth/login', {}, {auth: {username, password}});
 			login(data.token);
 			clearBanner();
 		} catch (error) {

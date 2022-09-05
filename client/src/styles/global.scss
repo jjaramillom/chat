@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import '~antd/dist/antd.css';
+@import '../../../node_modules/antd/dist/antd.css';
 
 html {
 	height: 100%;
