@@ -17,17 +17,18 @@
     ]
   },
   "engines": {
-    "node": ">=16.15",
+    "node": ">=20",
     "yarn": ">=1.22",
     "npm": "use-yarn-instead"
   },
   "scripts": {
     "ui": "yarn workspace client",
     "server": "yarn workspace server",
-    "app": "yarn workspace app",
-    "scan:vulnerabilities": "audit-ci --moderate --skip-dev"
+    "scan:vulnerabilities": "audit-ci --moderate --skip-dev",
+    "prepare": "husky"
   },
   "devDependencies": {
+    "@ianvs/prettier-plugin-sort-imports": "^4.4.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.11.0",
     "eslint-config-prettier": "^8.5.0",
@@ -39,11 +40,11 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "husky": "^7.0.4",
+    "husky": "^9.1.7",
     "lint-staged": "^12.3.7",
-    "prettier": "^2.6.0",
-    "typescript": "^4.8.2",
-    "utility-types": "^3.10.0"
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.2",
+    "utility-types": "^3.11.0"
   },
   "lint-staged": {
     "*.md": "prettier --write",
