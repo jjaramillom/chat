@@ -1,4 +1,9 @@
-import React, {createContext, useState, useContext} from 'react';
+import React, {
+	createContext,
+	useState,
+	useContext,
+	PropsWithChildren,
+} from 'react';
 
 interface State {
 	visible: boolean;
@@ -21,11 +26,17 @@ const notificationBannerContext = createContext<NotificationBannerContext>({
 	// eslint-disable-next-line @typescript-eslint/no-empty-function
 	showErrorBanner(message: string, details?: string) {},
 	// eslint-disable-next-line @typescript-eslint/no-empty-function
-	clearBanner() {}
+	clearBanner() {},
 });
 
-const NotificationBannerProvider: React.FC = ({children}) => {
-	const [state, setState] = useState<State>({visible: false, type: 'success', message: ''});
+const NotificationBannerProvider: React.FC<PropsWithChildren> = ({
+	children,
+}) => {
+	const [state, setState] = useState<State>({
+		visible: false,
+		type: 'success',
+		message: '',
+	});
 
 	function showSuccessBanner(message: string) {
 		setState({visible: true, type: 'success', message});
@@ -40,13 +51,16 @@ const NotificationBannerProvider: React.FC = ({children}) => {
 	}
 
 	return (
-		<notificationBannerContext.Provider value={{state, showSuccessBanner, showErrorBanner, clearBanner}}>
+		<notificationBannerContext.Provider
+			value={{state, showSuccessBanner, showErrorBanner, clearBanner}}
+		>
 			{children}
 		</notificationBannerContext.Provider>
 	);
 };
 
-const useNotificationBannerContext = (): NotificationBannerContext => useContext(notificationBannerContext);
+const useNotificationBannerContext = (): NotificationBannerContext =>
+	useContext(notificationBannerContext);
 
 export {notificationBannerContext, useNotificationBannerContext};
 export default NotificationBannerProvider;

@@ -1,5 +1,6 @@
-import React, {ComponentProps} from 'react';
-import {FCWithChildren} from '../types/shared';
+import React, {ComponentProps, PropsWithChildren} from 'react';
+
+type FCWithChildren = React.FC<PropsWithChildren>;
 
 export default (...components: FCWithChildren[]): FCWithChildren => {
 	return components.reduce(

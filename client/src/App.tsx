@@ -1,7 +1,7 @@
-import React, {ReactElement, useEffect} from 'react';
-import {Routes, Route} from 'react-router-dom';
+import {ReactElement, useEffect} from 'react';
+import {Routes, Route} from 'react-router';
 
-import NotificationBanner from './components/NotificationBanner/NotificationBanner';
+import {NotificationBanner} from './components';
 import Layout from './layout/Layout';
 import LoginPage from './modules/auth/pages/LoginPage';
 import ChatPage from './modules/chat/ChatPage';
@@ -21,9 +21,12 @@ function App() {
 	return (
 		<div>
 			<NotificationBanner />
-			<div className="w-full h-full">
+			<div className='w-full h-full'>
 				<Routes>
-					<Route path="/" element={jwt ? constructAuthView(<ChatPage />) : <LoginPage />} />
+					<Route
+						path='/'
+						element={jwt ? constructAuthView(<ChatPage />) : <LoginPage />}
+					/>
 				</Routes>
 			</div>
 		</div>

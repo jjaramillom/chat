@@ -1,6 +1,12 @@
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
-import React, {createContext, useState, useContext, useEffect} from 'react';
+import React, {
+	createContext,
+	useState,
+	useContext,
+	useEffect,
+	PropsWithChildren,
+} from 'react';
 
 const LOCAL_STORAGE_JWT_KEY = 'token';
 
@@ -21,10 +27,10 @@ const authContext = createContext<AuthContext>({
 	},
 	logout() {
 		/*  */
-	}
+	},
 });
 
-const AuthProvider: React.FC = ({children}) => {
+const AuthProvider: React.FC<PropsWithChildren> = ({children}) => {
 	const [jwt, setJwt] = useState<string>('');
 
 	useEffect(() => {
@@ -63,8 +69,9 @@ const AuthProvider: React.FC = ({children}) => {
 				jwt,
 				login,
 				tryAutoLogin,
-				logout
-			}}>
+				logout,
+			}}
+		>
 			{children}
 		</authContext.Provider>
 	);

@@ -1,8 +1,0 @@
-.banner {
-	$width: 700px;
-	width: $width;
-	position: fixed !important;
-	top: 10px;
-	left: calc(50% - ($width/2));
-	transition: opacity 1000ms;
-}
