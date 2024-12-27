@@ -1,26 +1,36 @@
-import express, {Request, Response, NextFunction} from 'express';
+import express, {Request, Response, NextFunction, Router} from 'express';
 import createError, {HttpError} from 'http-errors';
 import bodyParser from 'body-parser';
+import {clerkMiddleware} from '@clerk/express';
 
 import './env';
-import {loggerMiddleware} from './middleware';
+import {loggerMiddleware, authMiddleware} from './middleware';
 import {env, logger} from './utils';
-import MongoDBConnection from './services/MongoDbConnection';
 import usersRouter from './routes/usersRouter';
-import authRouter from './routes/authRouter';
-import roomsRouter from './routes/roomsRouter';
-import participantsRouter from './routes/participantsRouter';
+import chatsRouter from './routes/chatsRouter';
+import membersRouter from './routes/membersRouter';
 
 const app = express();
-MongoDBConnection.connect();
 
 app.use(bodyParser.json());
-app.use(loggerMiddleware);
 
-app.use('/api/auth', authRouter);
+app.use(loggerMiddleware);
+app.use(clerkMiddleware({signInUrl: 'test'}));
+app.use((req,res,next)=>{
+	logger.info(req.path);
+	next();
+})
+
+app.use(
+	'/api',
+	Router().get('/test', (req, res) => {
+		res.send('test');
+	})
+);
+app.use(authMiddleware);
 app.use('/api/users', usersRouter);
-app.use('/api/rooms', roomsRouter);
-app.use('/api/participants', participantsRouter);
+app.use('/api/chats', chatsRouter);
+app.use('/api/members', membersRouter);
 
 const port = env('PORT', '5000');
 
@@ -32,11 +42,12 @@ app.use((_, __, next: NextFunction) => {
 // error handler
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
+	logger.error(err);
 	res.locals.message = err.message;
 	res.locals.error = req.app.get('env') === 'development' ? err : {};
 
 	res.status(err.status || 500);
-	res.send(err);
+	res.send({error: err.message});
 });
 
 app.listen(port, () => {

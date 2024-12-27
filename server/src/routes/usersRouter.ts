@@ -1,13 +1,11 @@
 import {Router} from 'express';
 
-import {createUser, getAllUsers} from '../controllers/userController';
-import {authenticate} from '../middleware';
+import {getAllUsers} from '../controllers/userController';
+import {logger} from '../utils';
+import {requireAuth} from '@clerk/express';
 
 const usersRouter = Router();
 
-usersRouter
-	.route('/')
-	.get(authenticate.authenticate('jwt', {session: false}), getAllUsers)
-	.post(authenticate.authenticate('jwt', {session: false}), createUser);
+usersRouter.route('/').get(getAllUsers);
 
 export default usersRouter;

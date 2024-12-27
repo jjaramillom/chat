@@ -1,29 +1,16 @@
-import UserModel, {UserDocument} from '../models/User';
+import {db} from '../db';
+import {SelectUser, users} from '../db/schema';
 
 export default class UsersDataSource {
-	public async list(): Promise<UserDocument[]> {
-		const result = await UserModel.find();
-
-		return result.map(addId);
+	public async list(): Promise<SelectUser[]> {
+		return db.query.users.findMany();
 	}
 
-	public async getByUsername(username: string): Promise<UserDocument | null> {
-		const result = await UserModel.findOne({username});
-		return result ? addId(result) : null;
+	public async findById(id: string): Promise<SelectUser | undefined> {
+		return db.query.users.findFirst({where: (model, {eq}) => eq(model.id, id)});
 	}
 
-	public async getById(id: string): Promise<UserDocument | null> {
-		const result = await UserModel.findById(id);
-		return result ? addId(result) : null;
+	public async create(id: string): Promise<void> {
+		await db.insert(users).values({id});
 	}
-
-	public async create(user: UserDocument): Promise<UserDocument | null> {
-		const result = await UserModel.create(user);
-		return addId(result);
-	}
-}
-
-function addId(user: UserDocument): UserDocument {
-	user.id = user._id;
-	return user;
 }
