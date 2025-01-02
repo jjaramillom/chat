@@ -1,23 +1,17 @@
-import {ReactElement, useEffect} from 'react';
-import {Routes, Route} from 'react-router';
+import {ReactElement} from 'react';
+import {SignIn, useAuth} from '@clerk/clerk-react';
+import {Route, Routes} from 'react-router';
 
 import {NotificationBanner} from './components';
 import Layout from './layout/Layout';
-import LoginPage from './modules/auth/pages/LoginPage';
 import ChatPage from './modules/chat/ChatPage';
-import {useAuthContext} from './state/AuthProvider';
 
 function constructAuthView(content: ReactElement) {
 	return <Layout>{content}</Layout>;
 }
 
 function App() {
-	const {jwt, tryAutoLogin} = useAuthContext();
-
-	useEffect(() => {
-		tryAutoLogin();
-	}, []);
-
+	const auth = useAuth();
 	return (
 		<div>
 			<NotificationBanner />
@@ -25,7 +19,13 @@ function App() {
 				<Routes>
 					<Route
 						path='/'
-						element={jwt ? constructAuthView(<ChatPage />) : <LoginPage />}
+						element={
+							auth.isSignedIn ? (
+								constructAuthView(<ChatPage />)
+							) : (
+								<SignIn forceRedirectUrl='/' />
+							)
+						}
 					/>
 				</Routes>
 			</div>
