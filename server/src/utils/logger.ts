@@ -1,7 +1,15 @@
 import {createLogger, format, transports} from 'winston';
 
+import {isLogLevelValid} from '../env';
+
+let logLevel = process.env.LOG_LEVEL ?? 'info';
+
+if (!isLogLevelValid()) {
+	logLevel = 'info';
+}
+
 export default createLogger({
-	level: process.env.LOG_LEVEL ?? 'info',
+	level: logLevel,
 	format: format.combine(
 		format.colorize(),
 		format.timestamp(),
@@ -14,7 +22,7 @@ export default createLogger({
 			return output;
 		})
 	),
-	transports: [new transports.Console({})]
+	transports: [new transports.Console({})],
 });
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function

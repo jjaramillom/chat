@@ -1,14 +1,16 @@
-import express, {Request, Response, NextFunction, Router} from 'express';
-import createError, {HttpError} from 'http-errors';
-import bodyParser from 'body-parser';
 import {clerkMiddleware} from '@clerk/express';
+import bodyParser from 'body-parser';
+import express, {NextFunction, Request, Response, Router} from 'express';
+import createError, {HttpError} from 'http-errors';
 
-import './env';
-import {loggerMiddleware, authMiddleware} from './middleware';
-import {env, logger} from './utils';
-import usersRouter from './routes/usersRouter';
+import {validateEnv} from './env';
+import {authMiddleware, loggerMiddleware} from './middleware';
 import chatsRouter from './routes/chatsRouter';
 import membersRouter from './routes/membersRouter';
+import usersRouter from './routes/usersRouter';
+import {env, logger} from './utils';
+
+validateEnv();
 
 const app = express();
 
@@ -16,10 +18,6 @@ app.use(bodyParser.json());
 
 app.use(loggerMiddleware);
 app.use(clerkMiddleware({signInUrl: 'test'}));
-app.use((req,res,next)=>{
-	logger.info(req.path);
-	next();
-})
 
 app.use(
 	'/api',

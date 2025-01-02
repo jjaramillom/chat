@@ -1,9 +1,9 @@
-import {Request, Response, NextFunction} from 'express';
-import {z, ZodError} from 'zod';
+import {NextFunction, Request, Response} from 'express';
 import createError from 'http-errors';
+import {z, ZodError} from 'zod';
 
-import {InsertChat} from '../db/schema';
 import {ChatsDataSource} from '../dataSources';
+import {InsertChat} from '../db/schema';
 
 const chatsDataSource = new ChatsDataSource();
 

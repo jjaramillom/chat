@@ -1,6 +1,7 @@
 import {eq} from 'drizzle-orm';
+
 import {db} from '../db';
-import {InsertChat, SelectChat, chatMembers, chats} from '../db/schema';
+import {chatMembers, chats, InsertChat, SelectChat} from '../db/schema';
 
 export default class ChatsDataSource {
 	public async list(): Promise<SelectChat[]> {

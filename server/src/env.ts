@@ -1,9 +1,8 @@
-import dotEnv from 'dotenv';
 import {z} from 'zod';
+
 import {logger} from './utils';
 
-dotEnv.config();
-dotEnv.config({path: '.env.local', override: true});
+const LOG_LEVELS = ['error', 'warn', 'info', 'http', 'debug', 'silly'] as const;
 
 const schema = z.object({
 	PORT: z.string().refine(
@@ -13,18 +12,21 @@ const schema = z.object({
 		},
 		{message: 'PORT must be a positive integer'}
 	),
-	LOG_LEVEL: z.enum([
-		'error',
-		'warn',
-		'info',
-		'http',
-		'debug',
-		'silly',
-	] as const),
+	LOG_LEVEL: z.enum(LOG_LEVELS),
 	DATABASE_URL: z.string(),
-	NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string(),
+	CLERK_PUBLISHABLE_KEY: z.string(),
 	CLERK_SECRET_KEY: z.string(),
 });
+
+export function isLogLevelValid() {
+	const logLevel = process.env.LOG_LEVEL;
+
+	if (!logLevel) return true;
+
+	if (!['error', 'warn', 'info', 'http', 'debug', 'silly'].includes(logLevel as any)) {
+		return false;
+	}
+}
 
 export function validateEnv() {
 	const parsed = schema.safeParse(process.env);
