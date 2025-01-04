@@ -2,9 +2,9 @@ import {ReactElement} from 'react';
 import {SignIn, useAuth} from '@clerk/clerk-react';
 import {Route, Routes} from 'react-router';
 
-import {NotificationBanner} from './components';
-import Layout from './layout/Layout';
-import ChatPage from './modules/chat/ChatPage';
+import {Toaster} from '@/components/ui/sonner';
+import Layout from '@/layout/Layout';
+import ChatPage from '@/modules/chat/ChatPage';
 
 function constructAuthView(content: ReactElement) {
 	return <Layout>{content}</Layout>;
@@ -13,8 +13,8 @@ function constructAuthView(content: ReactElement) {
 function App() {
 	const auth = useAuth();
 	return (
-		<div>
-			<NotificationBanner />
+		<>
+			<Toaster position='bottom-center' expand closeButton />
 			<div className='w-full h-full'>
 				<Routes>
 					<Route
@@ -23,13 +23,17 @@ function App() {
 							auth.isSignedIn ? (
 								constructAuthView(<ChatPage />)
 							) : (
-								<SignIn forceRedirectUrl='/' />
+								<div className='w-full h-full flex justify-center'>
+									<div className='mt-8'>
+										<SignIn forceRedirectUrl='/' />
+									</div>
+								</div>
 							)
 						}
 					/>
 				</Routes>
 			</div>
-		</div>
+		</>
 	);
 }
 

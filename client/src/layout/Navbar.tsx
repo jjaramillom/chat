@@ -1,33 +1,51 @@
 import React from 'react';
-import {LogoutOutlined} from '@ant-design/icons';
+import {SignedIn, UserButton} from '@clerk/clerk-react';
+import {NavLink as NavLinkBase} from 'react-router';
+
 import {
-	SignedIn,
-	SignedOut,
-	SignInButton,
-	UserButton,
-} from '@clerk/clerk-react';
-import {Menu} from 'antd';
+	NavigationMenu,
+	NavigationMenuItem as NavigationMenuItemBase,
+	NavigationMenuList,
+} from '@/components/ui/navigation-menu';
 
 const Navbar: React.FC = () => {
 	return (
-		<Menu mode='horizontal' selectedKeys={['chat']}>
-			<Menu.Item key='chat'>Chat</Menu.Item>
-			{/* <Menu.Item key="config">Config</Menu.Item> */}
-			{/* @ts-ignore */}
-			<SignedOut>
-				<SignInButton />
-			</SignedOut>
-			{/* @ts-ignore */}
-			<SignedIn>
-				<Menu.Item
-					key='logout'
-					className='ml-auto mr-8'
-					icon={<LogoutOutlined />}
-				>
-					<UserButton />
-				</Menu.Item>
-			</SignedIn>
-		</Menu>
+		<NavigationMenu className='bg-gray-200'>
+			<NavigationMenuList>
+				<NavigationMenuItem>
+					<NavLink to='/'>Chat</NavLink>
+				</NavigationMenuItem>
+			</NavigationMenuList>
+			<div className='ml-auto'>
+				{/* @ts-ignore */}
+				<SignedIn>
+					<div className='ml-auto mr-8 flex items-center'>
+						<UserButton />
+					</div>
+				</SignedIn>
+			</div>
+		</NavigationMenu>
+	);
+};
+
+const NavigationMenuItem = ({children}: {children: React.ReactNode}) => {
+	return (
+		<NavigationMenuItemBase className='group inline-flex h-10 w-max items-center justify-center rounded-md bg-background text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50'>
+			{children}
+		</NavigationMenuItemBase>
+	);
+};
+
+const NavLink = ({children, to}: {children: string; to: string}) => {
+	return (
+		<NavLinkBase
+			to={to}
+			className={({isActive}) =>
+				`px-4 h-full flex items-center ${isActive ? 'text-orange-500' : ''}`
+			}
+		>
+			{children}
+		</NavLinkBase>
 	);
 };
 
