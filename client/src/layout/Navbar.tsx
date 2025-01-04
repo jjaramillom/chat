@@ -13,7 +13,7 @@ const Navbar: React.FC = () => {
 		<NavigationMenu className='bg-gray-200'>
 			<NavigationMenuList>
 				<NavigationMenuItem>
-					<NavLink to='/'>Chat</NavLink>
+					<NavLink to='/chats'>Chat</NavLink>
 				</NavigationMenuItem>
 			</NavigationMenuList>
 			<div className='ml-auto'>

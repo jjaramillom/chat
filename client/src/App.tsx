@@ -1,34 +1,48 @@
 import {ReactElement} from 'react';
 import {SignIn, useAuth} from '@clerk/clerk-react';
-import {Route, Routes} from 'react-router';
+import {Navigate, Route, Routes} from 'react-router';
 
 import {Toaster} from '@/components/ui/sonner';
 import Layout from '@/layout/Layout';
-import ChatPage from '@/modules/chat/ChatPage';
+import ChatDetailsPage from '@/modules/chat/ChatDetailsPage';
+import ChatsOverviewPage from '@/modules/chat/ChatsOverviewPage';
+import LoginPage from './modules/auth/LoginPage';
 
 function constructAuthView(content: ReactElement) {
 	return <Layout>{content}</Layout>;
 }
 
 function App() {
-	const auth = useAuth();
 	return (
 		<>
 			<Toaster position='bottom-center' expand closeButton />
 			<div className='w-full h-full'>
 				<Routes>
+					<Route path='/' element={<Navigate to='/chats' />} />
 					<Route
-						path='/'
+						path='/chats'
 						element={
-							auth.isSignedIn ? (
-								constructAuthView(<ChatPage />)
-							) : (
-								<div className='w-full h-full flex justify-center'>
-									<div className='mt-8'>
-										<SignIn forceRedirectUrl='/' />
-									</div>
-								</div>
-							)
+							<ProtectedLayout>
+								<ChatsOverviewPage />
+							</ProtectedLayout>
+						}
+					>
+						<Route path=':chatId' element={<ChatDetailsPage />} />
+					</Route>
+					<Route
+						path='/login'
+						element={
+							<Layout>
+								<LoginPage />
+							</Layout>
+						}
+					/>
+					<Route
+						path='*'
+						element={
+							<Layout>
+								<NotFoundPage />
+							</Layout>
 						}
 					/>
 				</Routes>
@@ -38,3 +52,20 @@ function App() {
 }
 
 export default App;
+
+function NotFoundPage() {
+	return (
+		<div className='w-full h-full flex justify-center'>
+			<span className='py-4 px-10 h-fit mt-20 bg-gray-200 rounded-sm'>
+				This page does not exist
+			</span>
+		</div>
+	);
+}
+
+function ProtectedLayout({children}: {children: React.ReactNode}) {
+	const auth = useAuth();
+
+	if (!auth.isSignedIn && auth.isLoaded) return <Navigate to='/login' />;
+	return <Layout>{children}</Layout>;
+}

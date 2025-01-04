@@ -13,7 +13,6 @@ export const AxiosInterceptor = ({children}: {children: React.ReactNode}) => {
 	const {getToken, sessionId} = useAuth();
 
 	useEffect(() => {
-		console.log(sessionId);
 		const interceptor = async (req: InternalAxiosRequestConfig) => {
 			const token = await getToken();
 			if (!token) return req;
