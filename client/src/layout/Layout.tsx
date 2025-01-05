@@ -1,6 +1,7 @@
 import React from 'react';
 import {useAuth} from '@clerk/clerk-react';
 
+import {LoadingIndicator} from '@/components';
 import Footer from './Footer';
 import Navbar from './Navbar';
 
@@ -13,10 +14,13 @@ const Layout: React.FC<React.PropsWithChildren> = ({children}) => {
 			{isLoaded ? (
 				<div className='relative p-5 flex-1 w-full'>{children}</div>
 			) : (
-				<div className='w-full h-full flex justify-center '>
-					<span className='py-4 px-10 h-fit bg-gray-200 rounded-sm my-[156px]'>loading...</span>
+				<div className='w-full h-full flex justify-center items-center'>
+					<div className='h-16 w-32 my-[156px]'> 
+						<LoadingIndicator />
+					</div>
 				</div>
 			)}
+
 			<Footer />
 		</div>
 	);

@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {PaperPlaneIcon} from '@radix-ui/react-icons';
+import {twMerge} from 'tailwind-merge';
 
 import {Button, Textarea} from '@/components';
 
@@ -14,6 +15,7 @@ const ChatInput: React.FC<Props> = ({
 	onSend,
 	text: initialText = '',
 	disabled,
+	className,
 }) => {
 	const [text, setText] = useState(initialText);
 	const handleSend = () => {
@@ -22,7 +24,7 @@ const ChatInput: React.FC<Props> = ({
 		}
 	};
 	return (
-		<div className='flex flex-row items-center'>
+		<div className={twMerge('flex flex-row items-center gap-2', className)}>
 			<Textarea
 				className='resize-none'
 				rows={3}
@@ -33,7 +35,7 @@ const ChatInput: React.FC<Props> = ({
 				size='icon'
 				disabled={disabled}
 				onClick={handleSend}
-				className='rounded-full'
+				className='rounded-full w-11'
 			>
 				<PaperPlaneIcon className='h-4 w-4' />
 			</Button>
