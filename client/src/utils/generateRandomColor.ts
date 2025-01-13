@@ -1,3 +1,5 @@
+// Extracted from https://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
+
 export function generateRandomHexColor() {
 	// Randomize hue (0 to 360 degrees)
 	const h = Math.floor(Math.random() * 360); // H: Hue, 0-360

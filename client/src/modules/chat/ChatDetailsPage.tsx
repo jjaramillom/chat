@@ -1,6 +1,5 @@
 import React from 'react';
-import qs from 'qs';
-import {useQuery} from 'react-query';
+import {useMutation, useQuery} from 'react-query';
 import {useParams} from 'react-router';
 
 import {Card, LoadingContainer} from '@/components';
@@ -14,27 +13,33 @@ const LIMIT = 10;
 
 const ChatPage: React.FC = () => {
 	const {chatId} = useParams();
-	const {data: messages, isLoading: isLoadingMessages} = useQuery<Message[]>(
+	const {
+		data: messages,
+		isLoading: isLoadingMessages,
+		refetch,
+	} = useQuery<Message[]>(
 		['messages', chatId],
 		() =>
 			axios
-				.get(`/messages/${chatId}`, {params: {offset: OFFSET, limit: LIMIT}})
+				.get(`chats/${chatId}/messages`, {
+					params: {offset: OFFSET, limit: LIMIT},
+				})
 				.then((r) => r.data),
 		{
 			keepPreviousData: true,
 		}
 	);
+	const {mutate: sendMessage} = useMutation<unknown,unknown,string>({
+		mutationFn: (content) => axios.post(`chats/${chatId}/messages`, {content}),
+		onSuccess: () => refetch(),
+	});
 
 	return (
 		<Card className='h-full w-full ml-5'>
 			<LoadingContainer isLoading={isLoadingMessages} className='min-h-20'>
 				<ChatMessages messages={messages} />
 			</LoadingContainer>
-			<ChatInput
-				onSend={() => {
-					/*  */
-				}}
-			/>
+			<ChatInput onSend={sendMessage} />
 		</Card>
 	);
 };

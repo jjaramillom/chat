@@ -36,7 +36,7 @@ export const ChatsList: React.FC<{
 							{chat.name}
 						</li>
 					))}
-				{chats && chats.length === 0 && <li>No chats</li>}
+				{chats && chats.length === 0 && <li className='p-3 '>No chats</li>}
 			</ul>
 		</Card>
 	);

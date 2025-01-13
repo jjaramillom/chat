@@ -9,7 +9,10 @@ export default class MessagesDataSource {
 		offset: number,
 		limit: number
 	): Promise<
-		(Omit<SelectMessage, 'sender_id' | 'chat_id'> & {senderUsername: string})[]
+		(Omit<SelectMessage, 'sender_id' | 'chat_id'> & {
+			senderUsername: string;
+			senderId: string;
+		})[]
 	> {
 		return db
 			.select({
@@ -18,6 +21,7 @@ export default class MessagesDataSource {
 				timestamp: messages.timestamp,
 				userId: users.id,
 				senderUsername: users.username,
+				senderId: users.id,
 			})
 			.from(messages)
 			.innerJoin(users, eq(users.id, messages.sender_id))
@@ -34,7 +38,8 @@ export default class MessagesDataSource {
 	}: Omit<InsertMessage, 'id'>): Promise<SelectMessage> {
 		const result = await db
 			.insert(messages)
-			.values({chat_id, content, sender_id});
-		throw new Error('Not implemented');
+			.values({chat_id, content, sender_id})
+			.returning();
+		return result[0];
 	}
 }
