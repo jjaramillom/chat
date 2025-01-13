@@ -8,5 +8,5 @@ export interface Message {
 	id: string;
 	content: string;
 	timestamp: string;
-	sender_id: string;
+	senderUsername: string;
 }

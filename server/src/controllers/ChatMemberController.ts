@@ -1,9 +1,8 @@
-import {Request, Response, NextFunction} from 'express';
-import {z, ZodError} from 'zod';
+import {NextFunction, Request, Response} from 'express';
 import createError from 'http-errors';
+import {z, ZodError} from 'zod';
 
-import {chatMembers, SelectChatMember, InsertChatMember} from '../db/schema';
-import {ChatsDataSource, ChatMembersDataSource} from '../dataSources';
+import {ChatMembersDataSource, ChatsDataSource} from '../dataSources';
 
 const chatsDataSource = new ChatsDataSource();
 const chatMembersDataSource = new ChatMembersDataSource();
@@ -22,10 +21,18 @@ const chatMemberValidation = z
 		chatId: parseInt(chatId),
 	}));
 
-export async function getMembers(req: Request, res: Response) {
+export async function getChatMembers(req: Request, res: Response) {
 	const {userId} = req.auth!;
+	const chatId = Number(req.params.chatId);
 
-	const chatMembers = await chatMembersDataSource.listByUserId(userId);
+	if (!chatId || isNaN(chatId))
+		return res.status(400).send('numeric chatId is required');
+
+	const canReadChat = await chatsDataSource.canUserReadChat(userId, chatId);
+	if (!canReadChat)
+		return res.status(403).send('user cannot read chat or it does not exist');
+
+	const chatMembers = await chatMembersDataSource.listByChatId(chatId);
 
 	res.status(200).send(chatMembers);
 }
@@ -49,6 +56,11 @@ export async function createChatMember(
 		return next(createError(400, 'Chat does not exist'));
 	}
 
+	const isAdmin = await chatsDataSource.isUserAdmin(userId, chat.id);
+	if (!isAdmin) {
+		return next(createError(403, 'User is not admin'));
+	}
+
 	const chatMembers = await chatMembersDataSource.listByChatId(
 		chatMemberData.chatId
 	);
@@ -58,11 +70,13 @@ export async function createChatMember(
 	}
 
 	try {
-		const member = await chatMembersDataSource.create({
-			chat_id: chatMemberData.chatId,
-			user_id: userId,
-		});
-		res.status(200).send(member).end();
+		const member = await chatMembersDataSource.create([
+			{
+				chat_id: chatMemberData.chatId,
+				user_id: userId,
+			},
+		]);
+		res.status(201).send(member).end();
 	} catch (error) {
 		next(createError(500, 'Could not create chat member'));
 	}

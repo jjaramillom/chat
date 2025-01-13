@@ -6,7 +6,6 @@ import {BrowserRouter} from 'react-router';
 
 import App from './App';
 import combineProviders from './state/combineProviders';
-import NotificationBannerProvider from './state/NotificationBannerProvider';
 import QueryClientProvider from './utils/queries/QueryClientProvider';
 
 import './styles/global.scss';
@@ -24,7 +23,6 @@ const root = createRoot(container!);
 
 const CombinedProviders = combineProviders(
 	QueryClientProvider,
-	NotificationBannerProvider
 );
 
 root.render(

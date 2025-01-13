@@ -2,14 +2,16 @@ import {NextFunction, Request, Response} from 'express';
 import createError from 'http-errors';
 import {z, ZodError} from 'zod';
 
-import {ChatsDataSource} from '../dataSources';
-import {InsertChat} from '../db/schema';
+import {ChatMembersDataSource, ChatsDataSource} from '../dataSources';
+import {InsertChat, InsertChatMember} from '../db/schema';
 
 const chatsDataSource = new ChatsDataSource();
+const chatMembersDataSource = new ChatMembersDataSource();
 
-const chatValidation = z.object({
+const chatSchema = z.object({
 	name: z.string().nullable().optional(),
 	type: z.enum(['private', 'public_group', 'private_group']),
+	membersIds: z.array(z.string()).optional(),
 }) satisfies z.ZodType<Omit<InsertChat, 'id'>>;
 
 export async function getChats(req: Request, res: Response) {
@@ -25,16 +27,39 @@ export async function createChat(
 	res: Response,
 	next: NextFunction
 ) {
-	const chatData = req.body;
+	let chatData = req.body as z.infer<typeof chatSchema>;
+	const {userId} = req.auth!;
 	try {
-		chatValidation.parse(chatData);
+		chatData = chatSchema.parse(chatData);
 	} catch (error) {
 		return next(createError(400, (error as ZodError).format()));
 	}
 
 	try {
-		const room = await chatsDataSource.create(chatData);
-		res.status(200).send(room).end();
+		const chat = await chatsDataSource.create({
+			type: chatData.type,
+			name: chatData.name,
+		});
+
+		const members: InsertChatMember[] = [
+			{chat_id: chat.id, user_id: userId, role: 'member'},
+		];
+
+		if (chatData.membersIds) {
+			members.push(
+				...chatData.membersIds.map(
+					(id): InsertChatMember => ({
+						chat_id: chat.id,
+						user_id: id,
+						role: 'member',
+					})
+				)
+			);
+		}
+
+		chatMembersDataSource.create(members);
+
+		res.status(200).send(chat).end();
 	} catch (error) {
 		next(createError(500, 'could not create chat'));
 	}

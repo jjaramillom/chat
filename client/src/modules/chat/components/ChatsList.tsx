@@ -10,16 +10,18 @@ export const ChatsList: React.FC<{
 }> = ({chats, onClick}) => {
 	const {chatId} = useParams();
 	return (
-		<Card className='min-w-40 max-w-[20vw]'>
+		<Card className='w-[20vw]' noPadding>
 			<ul>
-				{!chats ? (
+				{!chats && (
 					<li className='h-[90px] flex flex-col justify-center items-center p-3'>
 						loading ...
 					</li>
-				) : chats.length > 0 ? (
+				)}
+				{chats &&
+					chats.length > 0 &&
 					chats.map((chat) => (
 						<li
-							onClick={() => onClick(chat)}
+							onClick={() => (chat.id == chatId ? null : onClick(chat))}
 							role='button'
 							tabIndex={0}
 							key={chat.id}
@@ -33,10 +35,8 @@ export const ChatsList: React.FC<{
 						>
 							{chat.name}
 						</li>
-					))
-				) : (
-					<li>No chats</li>
-				)}
+					))}
+				{chats && chats.length === 0 && <li>No chats</li>}
 			</ul>
 		</Card>
 	);

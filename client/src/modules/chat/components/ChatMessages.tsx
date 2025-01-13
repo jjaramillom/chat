@@ -1,44 +1,36 @@
-import React, {useState} from 'react';
-import {ResizableBox, ResizeCallbackData} from 'react-resizable';
+import React from 'react';
 
-import {Card} from '../../../components';
-import useWindowDimensions from '../../../hooks/useWindowDimensions';
-import ChatInput from './ChatInput';
+import {generateRandomHexColor} from '@/utils/generateRandomColor';
+import {colorByUsername} from '../consts';
+import {Message} from '../types';
 
-const MIN_HEIGHT = 500;
-const MIN_WIDTH = 500;
-const MAIN_PADDING = 40;
-const FOOTER_HEIGHT = 38;
-const NAVBAR_HEIGHT = 46;
+export const ChatMessages: React.FC<{
+	messages?: Message[];
+}> = ({messages}) => {
+	if (messages && messages.length === 0) return <div>no messages yet</div>;
 
-const ChatMessages: React.FC = () => {
-	const {height: containerHeight, width: containerWidth} = useWindowDimensions();
-	const [width, setWidth] = useState(MIN_WIDTH);
-	const [height, setHeight] = useState(MIN_HEIGHT);
-
-	const handleResize = ({size}: ResizeCallbackData) => {
-		setWidth(size.width);
-		setHeight(size.height);
-	};
+	messages?.forEach(({senderUsername}) => {
+		if(!colorByUsername.has(senderUsername)) {
+			colorByUsername.set(senderUsername, generateRandomHexColor());
+		}
+	});
 
 	return (
-		<ResizableBox
-			height={height}
-			className="relative"
-			width={width}
-			maxConstraints={[containerWidth - MAIN_PADDING, containerHeight - MAIN_PADDING - FOOTER_HEIGHT - NAVBAR_HEIGHT]}
-			minConstraints={[MIN_WIDTH, MIN_HEIGHT]}
-			onResize={(_, data) => handleResize(data)}
-			handle={<span className="resize-handle" />}>
-			<Card className="w-full h-full">
-				<ChatInput
-					onSend={() => {
-						/*  */
-					}}
-				/>
-			</Card>
-		</ResizableBox>
+		<>
+			{!messages && <div>loading messages...</div>}
+			{messages && messages.length === 0 && <div>no messages yet</div>}
+			{messages && messages.length > 0 && (
+				<ul>
+					{messages.map(({id, senderUsername, content}) => (
+						<li key={id}>
+							<div style={{color: colorByUsername.get(senderUsername)}}>
+								{senderUsername}
+							</div>
+							{content}
+						</li>
+					))}
+				</ul>
+			)}
+		</>
 	);
 };
-
-export default ChatMessages;

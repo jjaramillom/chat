@@ -9,8 +9,4 @@ export default class UsersDataSource {
 	public async findById(id: string): Promise<SelectUser | undefined> {
 		return db.query.users.findFirst({where: (model, {eq}) => eq(model.id, id)});
 	}
-
-	public async create(id: string): Promise<void> {
-		await db.insert(users).values({id});
-	}
 }

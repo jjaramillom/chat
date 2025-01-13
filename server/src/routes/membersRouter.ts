@@ -2,11 +2,11 @@ import {Router} from 'express';
 
 import {
 	createChatMember,
-	getMembers,
-} from '../controllers/ChatMemberController';
+	getChatMembers,
+} from '../controllers/chatMemberController';
 
-const roomsRouter = Router();
+const membersRouter = Router();
 
-roomsRouter.route('/').get(getMembers).post(createChatMember);
+membersRouter.route('/:chatId').get(getChatMembers).post(createChatMember);
 
-export default roomsRouter;
+export default membersRouter;

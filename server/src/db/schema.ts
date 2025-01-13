@@ -1,14 +1,14 @@
 // schema.ts
 import {InferInsertModel, InferSelectModel} from 'drizzle-orm';
 import {
+	integer,
+	pgEnum,
 	pgTable,
+	primaryKey,
 	serial,
-	varchar,
 	text,
 	timestamp,
-	pgEnum,
-	integer,
-	primaryKey,
+	varchar,
 } from 'drizzle-orm/pg-core';
 
 // Define Enums
@@ -22,6 +22,7 @@ export const chatRoleEnum = pgEnum('chat_role', ['member', 'admin']);
 // Users Table
 export const users = pgTable('users', {
 	id: varchar('id', {length: 255}).primaryKey(),
+	username: varchar('username', {length: 255}).notNull(),
 });
 
 export type SelectUser = InferSelectModel<typeof users>;

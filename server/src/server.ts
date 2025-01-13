@@ -8,6 +8,7 @@ import {authMiddleware, loggerMiddleware} from './middleware';
 import chatsRouter from './routes/chatsRouter';
 import membersRouter from './routes/membersRouter';
 import usersRouter from './routes/usersRouter';
+import messagesRouter from './routes/messagesRouter';
 import {env, logger} from './utils';
 
 validateEnv();
@@ -29,6 +30,7 @@ app.use(authMiddleware);
 app.use('/api/users', usersRouter);
 app.use('/api/chats', chatsRouter);
 app.use('/api/members', membersRouter);
+app.use('/api/messages', messagesRouter); 
 
 const port = env('PORT', '5000');
 

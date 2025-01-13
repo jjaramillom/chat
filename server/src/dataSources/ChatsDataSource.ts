@@ -1,4 +1,4 @@
-import {eq} from 'drizzle-orm';
+import {and, eq, or} from 'drizzle-orm';
 
 import {db} from '../db';
 import {chatMembers, chats, InsertChat, SelectChat} from '../db/schema';
@@ -36,12 +36,48 @@ export default class ChatsDataSource {
 	public async create({
 		type,
 		name,
-	}: Omit<InsertChat, 'id'>): Promise<SelectChat | null> {
-		const result = await db.insert(chats).values({type, name});
-		throw new Error('Not implemented');
+	}: Omit<InsertChat, 'id'>): Promise<SelectChat> {
+		const result = await db.insert(chats).values({type, name}).returning();
+		return result[0];
 	}
 
 	public async findById(id: number): Promise<SelectChat | undefined> {
 		return db.query.chats.findFirst({where: (model, {eq}) => eq(model.id, id)});
+	}
+
+	public async isUserAdmin(
+		userId: string,
+		chatId: number
+	): Promise<boolean> {
+		const userChats = await db
+			.select({
+				chatId: chats.id,
+				chatType: chats.type,
+			})
+			.from(chatMembers)
+			.leftJoin(chats, eq(chats.id, chatMembers.chat_id))
+			.where(
+				and(eq(chatMembers.user_id, userId), eq(chatMembers.role, 'admin'))
+			);
+
+		return userChats.some((chat) => chat.chatId === chatId);
+	}
+
+	public async canUserReadChat(
+		userId: string,
+		chatId: number
+	): Promise<boolean> {
+		const userChats = await db
+			.select({
+				chatId: chats.id,
+				chatType: chats.type,
+			})
+			.from(chatMembers)
+			.leftJoin(chats, eq(chats.id, chatMembers.chat_id))
+			.where(
+				or(eq(chatMembers.user_id, userId), eq(chats.type, 'public_group'))
+			);
+
+		return userChats.some((chat) => chat.chatId === chatId);
 	}
 }
