@@ -1,36 +1,32 @@
 import {clerkMiddleware} from '@clerk/express';
 import bodyParser from 'body-parser';
-import express, {NextFunction, Request, Response, Router} from 'express';
+import {NextFunction, Request, Response, Router} from 'express';
 import createError, {HttpError} from 'http-errors';
 
+import app from './app';
 import {validateEnv} from './env';
+import server from './httpServer';
 import {authMiddleware, loggerMiddleware} from './middleware';
 import chatsRouter from './routes/chatsRouter';
 import membersRouter from './routes/membersRouter';
-import usersRouter from './routes/usersRouter';
 import messagesRouter from './routes/messagesRouter';
+import usersRouter from './routes/usersRouter';
 import {env, logger} from './utils';
 
-validateEnv();
+import './subscriptions/socket';
 
-const app = express();
+validateEnv();
 
 app.use(bodyParser.json());
 
 app.use(loggerMiddleware);
 app.use(clerkMiddleware({signInUrl: 'test'}));
 
-app.use(
-	'/api',
-	Router().get('/test', (req, res) => {
-		res.send('test');
-	})
-);
 app.use(authMiddleware);
 app.use('/api/users', usersRouter);
 app.use('/api/chats', chatsRouter);
 app.use('/api/members', membersRouter);
-app.use('/api/messages', messagesRouter); 
+app.use('/api/messages', messagesRouter);
 
 const port = env('PORT', '5000');
 
@@ -50,8 +46,8 @@ app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
 	res.send({error: err.message});
 });
 
-app.listen(port, () => {
-	logger.info(`Chart server is running on http://localhost:${port}`);
+server.listen(port, () => {
+	logger.info(`Chat server is running on http://localhost:${port}`);
 });
 
 // Exported for testing

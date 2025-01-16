@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {useAuth} from '@clerk/clerk-react';
 import {format} from 'date-fns';
 
@@ -9,6 +9,23 @@ import {Message} from '../types';
 export const ChatMessages: React.FC<{
 	messages?: Message[];
 }> = ({messages}) => {
+	const listRef = useRef<HTMLUListElement>(null);
+	const isInitialRender = useRef(true);
+
+	useEffect(() => {
+		if (!listRef.current) return;
+		const scrollToBottom =
+			listRef.current.scrollHeight -
+			listRef.current.clientHeight -
+			listRef.current.scrollTop;
+
+		// Scroll to bottom if we are less than 200px from the bottom
+		if (scrollToBottom < 200 || isInitialRender.current) {
+			isInitialRender.current = false;
+			listRef.current.scrollTop = listRef.current.scrollHeight;
+		}
+	}, [messages]);
+
 	if (messages && messages.length === 0) return <div>no messages yet</div>;
 
 	messages?.forEach(({senderUsername}) => {
@@ -18,17 +35,20 @@ export const ChatMessages: React.FC<{
 	});
 
 	return (
-		<>
-			{!messages && <div>loading messages...</div>}
-			{messages && messages.length === 0 && <div>no messages yet</div>}
+		<div className='h-full'>
+			{!messages && <>loading messages...</>}
+			{messages && messages.length === 0 && <>no messages yet</>}
 			{messages && messages.length > 0 && (
-				<ul className='flex flex-col gap-2 mb-3'>
+				<ul
+					className='flex flex-col gap-2 mb-3 overflow-auto h-full'
+					ref={listRef}
+				>
 					{messages.map((message) => (
 						<ChatMessage key={message.id} message={message} />
 					))}
 				</ul>
 			)}
-		</>
+		</div>
 	);
 };
 
@@ -46,7 +66,7 @@ const ChatMessage: React.FC<{
 			</div>
 			<div>{message.content}</div>
 			<div className='text-xs ml-auto text-end text-gray-500'>
-				{format(new Date(message.timestamp), 'HH:mm')}
+				{format(new Date(message.timestamp), 'd/MM/y 	p')}
 			</div>
 		</li>
 	);

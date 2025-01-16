@@ -1,3 +1,8 @@
+export interface Paginated<T> {
+	data: T[];
+	total: number;
+}
+
 export interface Chat {
 	id: string;
 	name: string;

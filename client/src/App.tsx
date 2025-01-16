@@ -1,16 +1,11 @@
-import {ReactElement} from 'react';
-import {SignIn, useAuth} from '@clerk/clerk-react';
+import {useAuth} from '@clerk/clerk-react';
 import {Navigate, Route, Routes} from 'react-router';
 
 import {Toaster} from '@/components/ui/sonner';
 import Layout from '@/layout/Layout';
-import ChatDetailsPage from '@/modules/chat/ChatDetailsPage';
-import ChatsOverviewPage from '@/modules/chat/ChatsOverviewPage';
+import {ChatDetailsPage} from '@/modules/chat/ChatDetailsPage';
+import {ChatsOverviewPage} from '@/modules/chat/ChatsOverviewPage';
 import LoginPage from './modules/auth/LoginPage';
-
-function constructAuthView(content: ReactElement) {
-	return <Layout>{content}</Layout>;
-}
 
 function App() {
 	return (

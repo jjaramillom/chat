@@ -63,7 +63,7 @@ export default class ChatsDataSource {
 		return userChats.some((chat) => chat.chatId === chatId);
 	}
 
-	public async canUserReadChat(
+	public async canUserAccessChat(
 		userId: string,
 		chatId: number
 	): Promise<boolean> {

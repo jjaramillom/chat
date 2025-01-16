@@ -2,17 +2,19 @@ import {NextFunction, Request, Response} from 'express';
 import createError from 'http-errors';
 import {z, ZodError} from 'zod';
 
-import {ChatsDataSource, MessagesDataSource} from '../dataSources';
+import {
+	ChatsDataSource,
+	MessagesDataSource,
+	UsersDataSource,
+} from '../dataSources';
+import {MessageWithUsername} from '../dataSources/MessagesDataSource';
+import {Paginated} from '../dataSources/types';
 import {InsertMessage} from '../db/schema';
-import {messages} from './../db/schema';
+import {io} from '../subscriptions/socket';
 
 const messagesDataSource = new MessagesDataSource();
 const chatsDataSource = new ChatsDataSource();
-
-const messageSchema = z.object({
-	content: z.string(),
-	chat_id: z.number(),
-}) satisfies z.ZodType<Omit<InsertMessage, 'id' | 'sender_id'>>;
+const usersDataSource = new UsersDataSource();
 
 const newMessageSchema = z.object({
 	content: z.string(),
@@ -35,17 +37,14 @@ export async function getMessages(req: Request, res: Response) {
 	if (!chatId || isNaN(chatId))
 		return res.status(400).send('numeric chatId is required');
 
-	const canReadChat = await chatsDataSource.canUserReadChat(userId, chatId);
+	const canReadChat = await chatsDataSource.canUserAccessChat(userId, chatId);
 	if (!canReadChat)
 		return res.status(403).send('user cannot read chat or it does not exist');
 
-	const chats = await messagesDataSource.lisByChatId(
-		chatId,
-		castedOffset,
-		castedLimit
-	);
+	const {data, total}: Paginated<MessageWithUsername> =
+		await messagesDataSource.listByChatId(chatId, castedOffset, castedLimit);
 
-	res.status(200).send(chats);
+	res.status(200).json({total, data: data});
 }
 
 export async function createMessage(
@@ -65,8 +64,8 @@ export async function createMessage(
 	if (!chatId || isNaN(chatId))
 		return res.status(400).send('numeric chatId is required');
 
-	const canReadChat = await chatsDataSource.canUserReadChat(userId, chatId);
-	if (!canReadChat)
+	const canAccessChat = await chatsDataSource.canUserAccessChat(userId, chatId);
+	if (!canAccessChat)
 		return res.status(403).send('user cannot access chat or it does not exist');
 
 	const message = await messagesDataSource.create({
@@ -74,6 +73,16 @@ export async function createMessage(
 		content: messageData.content,
 		sender_id: userId,
 	});
+	const senderUsername = await usersDataSource
+		.getUsername(userId)
+		.catch(() => 'unknown-user');
 
-	res.status(201).send(message).end();
+	const data: MessageWithUsername = {
+		...message,
+		senderUsername,
+	};
+
+	io.emit(`chat_${chatId}`, data);
+
+	res.status(201).end();
 }

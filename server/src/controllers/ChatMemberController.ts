@@ -28,7 +28,7 @@ export async function getChatMembers(req: Request, res: Response) {
 	if (!chatId || isNaN(chatId))
 		return res.status(400).send('numeric chatId is required');
 
-	const canReadChat = await chatsDataSource.canUserReadChat(userId, chatId);
+	const canReadChat = await chatsDataSource.canUserAccessChat(userId, chatId);
 	if (!canReadChat)
 		return res.status(403).send('user cannot read chat or it does not exist');
 

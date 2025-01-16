@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development ts-node-dev -r ./dotenv --respawn --clear --notify=false src/server.ts",
+    "dev:debug": "cross-env NODE_ENV=development ts-node-dev -r ./dotenv --inspect --respawn --clear --notify=false src/server.ts",
     "test": "cross-env NODE_ENV=test jest",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
@@ -38,8 +39,9 @@
     "express": "^4.21.2",
     "express-validator": "^6.14.0",
     "http-errors": "^2.0.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
+    "socket.io": "^4.8.1",
     "ts-node-dev": "^2.0.0",
     "winston": "^3.6.0",
     "zod": "^3.24.1"

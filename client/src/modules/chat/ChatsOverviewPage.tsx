@@ -7,7 +7,7 @@ import axios from '@/utils/queries/axios';
 import {ChatsList} from './components/ChatsList';
 import {Chat} from './types';
 
-const ChatsOverviewPage: React.FC = () => {
+export const ChatsOverviewPage: React.FC = () => {
 	const navigate = useNavigate();
 	const {data, isLoading} = useQuery<Chat[]>('chats', () =>
 		axios.get('/chats').then((r) => r.data)
@@ -25,5 +25,3 @@ const ChatsOverviewPage: React.FC = () => {
 		</div>
 	);
 };
-
-export default ChatsOverviewPage;

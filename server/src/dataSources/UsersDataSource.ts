@@ -9,4 +9,10 @@ export default class UsersDataSource {
 	public async findById(id: string): Promise<SelectUser | undefined> {
 		return db.query.users.findFirst({where: (model, {eq}) => eq(model.id, id)});
 	}
+
+	public async getUsername(id: string): Promise<string> {
+		const user = await this.findById(id);
+		if (!user) throw new Error('User not found');
+		return user.username;
+	}
 }

@@ -2,8 +2,8 @@ import {toast} from 'sonner';
 
 export default function useToast() {
 	return {
-		success: (message: string) => toast.success(message),
-		error: (message: string) => toast.error(message),
-		info: (message: string) => toast.info(message),
+		showSuccess: (message: string) => toast.success(message),
+		showError: (message: string) => toast.error(message),
+		showInfo: (message: string) => toast.info(message),
 	};
 }

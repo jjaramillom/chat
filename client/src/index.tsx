@@ -10,6 +10,7 @@ import QueryClientProvider from './utils/queries/QueryClientProvider';
 
 import './styles/global.scss';
 
+import SocketProvider from './state/SocketProvider';
 import {AxiosInterceptor} from './utils/queries/axios';
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
@@ -21,20 +22,18 @@ if (!PUBLISHABLE_KEY) {
 const container = document.getElementById('root');
 const root = createRoot(container!);
 
-const CombinedProviders = combineProviders(
-	QueryClientProvider,
-);
+const CombinedProviders = combineProviders(QueryClientProvider, SocketProvider);
 
 root.render(
 	<React.StrictMode>
 		<BrowserRouter>
-			<CombinedProviders>
-				<ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl='/'>
+			<ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl='/'>
+				<CombinedProviders>
 					<AxiosInterceptor>
 						<App />
 					</AxiosInterceptor>
-				</ClerkProvider>
-			</CombinedProviders>
+				</CombinedProviders>
+			</ClerkProvider>
 		</BrowserRouter>
 	</React.StrictMode>
 );
